@@ -37,6 +37,7 @@ ColonyPy is not commercially code-signed as it is an academic research tool. You
 2. Check **"Allow executing file as program"**
 3. Double-click to open, or right-click → Run as Program
 
+> If you continue to experience issues bypassing the security warning, please open a [GitHub Issue](../../issues) or contact us directly and we will assist you.
 
 
 ## User Manual
