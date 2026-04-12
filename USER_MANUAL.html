@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ColonyPy User Manual</title>
+<style>
+  :root {
+    --accent: #2c7be5;
+    --accent-dark: #1a5cbf;
+    --warn: #e67e22;
+    --danger: #c0392b;
+    --success: #27ae60;
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #dee2e6;
+    --text: #212529;
+    --muted: #6c757d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; color: var(--text); background: var(--bg); line-height: 1.7; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: white; padding: 48px 40px 36px; position: relative; overflow: hidden;
+  }
+  header::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: rgba(44,123,229,0.15);
+  }
+  header h1 { font-size: 3rem; font-weight: 700; letter-spacing: -1px; }
+  header p.subtitle { font-size: 1.1rem; color: #adb5bd; margin-top: 6px; }
+  header .badge {
+    display: inline-block; margin-top: 16px; padding: 4px 14px;
+    background: rgba(39,174,96,0.25); border: 1px solid rgba(39,174,96,0.5);
+    border-radius: 20px; font-size: 0.85rem; color: #7df7aa;
+  }
+
+  nav {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100; padding: 0 40px;
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  nav a {
+    padding: 14px 18px; display: block; font-size: 0.88rem; font-weight: 500;
+    color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap;
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+  main { max-width: 980px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  h2 {
+    font-size: 1.7rem; font-weight: 700; margin: 48px 0 18px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--border);
+    scroll-margin-top: 80px;
+  }
+  h3 { font-size: 1.15rem; font-weight: 600; margin: 28px 0 10px; color: var(--accent-dark); }
+  h4 { font-size: 1rem; font-weight: 600; margin: 18px 0 8px; }
+  p { margin-bottom: 14px; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 22px 26px; margin-bottom: 20px;
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-warn { border-left: 4px solid var(--warn); background: #fff8f0; }
+  .card-danger { border-left: 4px solid var(--danger); background: #fff5f5; }
+  .card-success { border-left: 4px solid var(--success); background: #f0faf4; }
+
+  .note-label {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .card-warn .note-label { color: var(--warn); }
+  .card-danger .note-label { color: var(--danger); }
+  .card-success .note-label { color: var(--success); }
+  .card-accent .note-label { color: var(--accent); }
+
+  table {
+    width: 100%; border-collapse: collapse; margin-bottom: 20px;
+    font-size: 0.9rem; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  th { background: #f1f3f5; font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+  td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8f9fa; }
+
+  code {
+    background: #f1f3f5; padding: 2px 7px; border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace; font-size: 0.88em; color: #c0392b;
+  }
+  pre {
+    background: #1e1e2e; color: #cdd6f4; padding: 18px 20px;
+    border-radius: 8px; overflow-x: auto; margin: 14px 0 20px;
+    font-size: 0.88rem; line-height: 1.6;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+
+  ol, ul { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; }
+
+  .step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
+  .step-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; text-align: center; position: relative;
+  }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--accent);
+    color: white; font-weight: 700; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .step-card h4 { margin: 0 0 6px; font-size: 0.95rem; }
+  .step-card p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  .badge-pill {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .badge-tol { background: #e0fffe; color: #008080; }
+  .badge-het { background: #ffe0ff; color: #9b059b; }
+  .badge-ctrl { background: #fff3e0; color: #e67e22; }
+
+  .btn-demo {
+    display: inline-block; background: #2c7be5; color: white;
+    padding: 4px 14px; border-radius: 6px; font-size: 0.85rem;
+    font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;
+    border: 1px solid #1a5cbf; white-space: nowrap;
+  }
+  .btn-demo-sm {
+    display: inline-block; background: #f1f3f5; color: #212529;
+    padding: 2px 10px; border-radius: 5px; font-size: 0.82rem;
+    font-weight: 600; border: 1px solid #dee2e6; white-space: nowrap;
+  }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 18px 0; }
+  .metric-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; text-align: center;
+  }
+  .metric-box .val { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+  .metric-box .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+  details { margin: 12px 0; }
+  summary {
+    cursor: pointer; font-weight: 600; padding: 10px 16px;
+    background: #f1f3f5; border-radius: 6px; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  summary::after { content: '▼'; font-size: 0.75rem; transition: transform .2s; }
+  details[open] summary::after { transform: rotate(180deg); }
+  details > div { padding: 14px 16px; border: 1px solid var(--border); border-top: none; border-radius: 0 0 6px 6px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  footer { background: #1e1e2e; color: #adb5bd; text-align: center; padding: 24px; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ColonyPy</h1>
+  <p class="subtitle">Colony Image Analysis Pipeline User Manual</p>
+  <div class="badge">Version 1.0 &nbsp;·&nbsp; Nielsen Laboratory &nbsp;·&nbsp; Virginia Tech University</div>
+</header>
+
+<nav>
+  <a href="#overview">Overview</a>
+  <a href="#launching">Launching</a>
+  <a href="#imaging">Imaging</a>
+  <a href="#good-practice">Good Practice</a>
+  <a href="#install">Installation</a>
+  <a href="#workflow">Workflow</a>
+  <a href="#naming">File Naming</a>
+  <a href="#setup-tab">Setup Tab</a>
+  <a href="#analysis-tab">Analysis Tab</a>
+  <a href="#editor">Manual Editor</a>
+  <a href="#adjustments">Adjustments</a>
+  <a href="#reopen">Re-opening Sessions</a>
+  <a href="#reruns">Re-runs</a>
+  <a href="#output">Output Files</a>
+  <a href="#model">Model Details</a>
+  <a href="#troubleshooting">Troubleshooting</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<main>
+
+<!-- OVERVIEW -->
+<h2 id="overview">Overview</h2>
+<p>ColonyPy automates the counting and classification of fungal colonies on petri dish images. It uses a trained <strong>StarDist</strong> deep-learning model to detect individual colonies, measures their size, and classifies each colony as either:</p>
+<ul>
+  <li><span class="badge-pill badge-tol">Tolerance</span> smaller than the control-derived median colony size (grows under drug pressure)</li>
+  <li><span class="badge-pill badge-het">Heteroresistance</span> same size or larger than the control median (potentially resistant sub-population)</li>
+</ul>
+<p>The classification threshold is derived automatically from matching <strong>control plates</strong> (no-drug) using the same strain. No manual threshold setting is required when control plates are present.</p>
+
+<div class="metric-grid">
+  <div class="metric-box"><div class="val">82.9%</div><div class="lbl">Precision</div></div>
+  <div class="metric-box"><div class="val">78.2%</div><div class="lbl">Recall</div></div>
+  <div class="metric-box"><div class="val">80.5%</div><div class="lbl">F1 Score</div></div>
+  <div class="metric-box"><div class="val">99/100</div><div class="lbl">Best Epoch</div></div>
+</div>
+
+<div class="card card-success">
+  <div class="note-label">Bundled Model</div>
+  The trained StarDist model is included in the <code>model_data/</code> folder and loads automatically when ColonyPy starts. You do not need to attach or download any model file separately.
+</div>
+
+<!-- LAUNCHING -->
+<h2 id="launching">Launching ColonyPy</h2>
+<p>ColonyPy is distributed as a <strong>standalone executable</strong> built with PyInstaller. No Python installation, no command line, and no internet connection are required on the user's machine. Everything including the trained StarDist model and all dependencies is bundled inside the executable.</p>
+
+<div class="two-col">
+  <div class="card">
+    <div class="note-label" style="color:#0078d4">Windows</div>
+    <p>Double-click <code>ColonyPy.exe</code></p>
+    <p style="font-size:0.85rem;color:var(--muted)">Windows may show a SmartScreen warning on first launch. Click <strong>More info → Run anyway</strong>.</p>
+  </div>
+  <div class="card">
+    <div class="note-label" style="color:#555">macOS</div>
+    <p>Double-click <code>ColonyPy.app</code></p>
+    <p style="font-size:0.85rem;color:var(--muted)">On first launch, right-click → Open → Open. You may need to allow it in <strong>System Settings → Privacy & Security</strong>.</p>
+  </div>
+</div>
+<div class="two-col">
+  <div class="card">
+    <div class="note-label" style="color:#e95420">Linux</div>
+    <p>Run <code>./ColonyPy/ColonyPy</code> from a terminal, or double-click if your file manager supports it.</p>
+  </div>
+  <div class="card card-accent">
+    <div class="note-label">No Setup Required</div>
+    <p>The executable is entirely self-contained. There is no installation step and no internet connection needed to run ColonyPy.</p>
+  </div>
+</div>
+
+<div class="card card-warn">
+  <div class="note-label">First Launch Slow Start</div>
+  On the very first launch, the executable may take 15–30 seconds to start while it unpacks its bundled libraries. Subsequent launches are faster. This is normal behaviour for PyInstaller executables.
+</div>
+
+<!-- IMAGING -->
+<h2 id="imaging">Imaging Requirements</h2>
+<p>For reliable colony detection, images <strong>must</strong> match the conditions used to train the StarDist model. Deviation from these conditions will reduce detection accuracy.</p>
+
+<table>
+  <tr><th>Parameter</th><th>Required Value</th><th>Notes</th></tr>
+  <tr><td>Background</td><td>White transillumination tray</td><td>Tray must be clean as residue causes false detections</td></tr>
+  <tr><td>Imager</td><td>Bio-Rad ChemiDoc</td><td>White transillumination mode</td></tr>
+  <tr><td>Exposure</td><td><strong>0.9 seconds</strong></td><td>Recommended for Coomassie Blue lighting application</td></tr>
+  <tr><td>Image size</td><td>Medium (ChemiDoc setting)</td><td>1830 × 1646 pixels</td></tr>
+  <tr><td>Resolution</td><td>300 DPI</td><td>Both axes</td></tr>
+  <tr><td>Bit depth</td><td>24-bit colour</td><td>8-bit per RGB channel</td></tr>
+  <tr><td>Physical size</td><td>15.5 × 12.4 cm</td><td>At the Medium image setting</td></tr>
+  <tr><td>Plate size</td><td>90 mm petri dish</td><td>Standard round plate</td></tr>
+  <tr><td>Export format</td><td>JPEG or PNG or TIFF</td><td>Do not resize images before importing</td></tr>
+</table>
+
+<div class="card card-warn">
+  <div class="note-label">Do Not Resize</div>
+  Never resize or resample images before importing into ColonyPy. The pixel-to-mm calibration assumes the original ChemiDoc dimensions (1830 × 1646 px, 300 DPI). Resizing invalidates the calibration and produces incorrect colony size measurements.
+</div>
+
+<h3>ChemiDoc Export Settings</h3>
+<p>When exporting from the ChemiDoc Image Lab software, use these exact settings:</p>
+<ol>
+  <li>Select <strong>File → Export Image</strong></li>
+  <li>Set image size to <strong>Medium</strong></li>
+  <li>Resolution: <strong>300 DPI</strong></li>
+  <li>Format: <strong>JPEG</strong> (high quality) or <strong>PNG</strong></li> or <strong>TIFF</strong></li>
+  <li>Do <strong>not</strong> apply any post-processing filters before export</li>
+</ol>
+
+<!-- GOOD PRACTICE -->
+<h2 id="good-practice">Good Practice Guidelines</h2>
+
+<h3>Inoculum Preparation</h3>
+<div class="card card-danger">
+  <div class="note-label">Critical: Control Plate Inoculum Concentration</div>
+  <p>ColonyPy uses StarDist, a <strong>convex shape detection model</strong>. It is designed to detect convex colonies. It cannot detect colonies within confluent lawns.</p>
+  <p style="margin-top:10px">Using too high an inoculum in strain control plates will cause:</p>
+  <ul style="margin-top:6px">
+    <li>Unreliable threshold calibration from control plates</li>
+  </ul>
+</div>
+
+<p><strong>Recommended practice:</strong></p>
+<ul>
+  <li>Optimise inoculum concentration so that colonies on the control plate are <strong>well-separated</strong></li>
+  <li>Control plates should produce <strong>distinct, non-overlapping colonies</strong> across the whole plate</li>
+  <li>Aim for 100-500 countable colonies per plate</li>
+  <li>Dutring testing, if the ZOI shows a lawn, dilute the inoculum and repeat</li>
+</ul>
+
+<h3>Plate Preparation</h3>
+<ul>
+  <li>Use standard 90 mm round petri dishes, any other sizes require parameter adjustment</li>
+  <li>Ensure the tray is clean before imaging. Residue on the tray creates bright spots that may be detected as colonies</li>
+  <li>Place only one plate per image. ColonyPy analyses one plate per image file</li>
+  <li>Remove the plate lid before imaging</li>
+  <li>Ensure the plate is upright, resting on its bottom, with the agar surface facing up</li>
+  <li>Do not image plates with writing on the bottom or along the sides, as markings interfere with analysis</li>
+  <li>Ensure the plate is centred and fully in frame with no shadows cut across it</li>
+</ul>
+
+<h3>Critical: Plate Cleanliness</h3>
+<ul>
+  <li>The agar surface, plate rim and plate bottom must be free of artefacts, bubbles, condensation, or media residue. Any dark marks near the plate edge can disrupt the plate-boundary detection algorithm.
+</ul>
+
+<h3>Re-run and Overwrite Policy</h3>
+<div class="card card-warn">
+  <div class="note-label">Important: Output Directory Policy</div>
+  <p>ColonyPy writes results into the output directory you specify. If you re-run an analysis with the same output directory, the <code>colony_analysis_results.csv</code> file is <strong>overwritten</strong> for any image that is re-processed.</p>
+  <p style="margin-top:10px"><strong>Best practice: always use a new, separate output directory for each re-run.</strong> This preserves your original results and avoids accidental data loss. Use clear naming such as:</p>
+  <ul style="margin-top:6px">
+    <li><code>results_2025-06-01_run1/</code></li>
+    <li><code>results_2025-06-01_run2_adjusted_ZOI/</code></li>
+  </ul>
+</div>
+
+<!-- INSTALLATION -->
+<h2 id="install">Installation</h2>
+
+<div class="card card-success">
+  <div class="note-label">No Installation Required</div>
+  ColonyPy is a standalone executable. There is nothing to install. Python does not need to be installed on your machine.
+</div>
+
+<h3>System Requirements</h3>
+<ul>
+  <li>Windows 10/11, macOS 12+, or Linux (Ubuntu 20.04+)</li>
+  <li>4 GB RAM minimum (8 GB recommended for large batches)</li>
+  <li>No internet connection needed to run ColonyPy</li>
+</ul>
+
+<h3>Step-by-step Setup</h3>
+<ol>
+  <li>Download the ColonyPy package for your operating system</li>
+  <li>Unzip or extract the file to a location of your choice (e.g. <code>Documents/ColonyPy</code>)</li>
+  <li>Double-click the executable to launch see <a href="#launching">Launching</a> above for platform-specific instructions</li>
+</ol>
+
+<div class="card card-success">
+  <div class="note-label">End User: What You Receive</div>
+  <p>ColonyPy is distributed as a fully self-contained executable. The model, dependencies, and manual are all bundled inside. You receive only:</p>
+  <div class="two-col" style="margin-top:12px">
+    <div>
+      <strong>Windows</strong>
+      <pre><code>ColonyPy.exe          ← double-click to launch
+USER_MANUAL.html      ← open in browser</code></pre>
+    </div>
+    <div>
+      <strong>macOS</strong>
+      <pre><code>ColonyPy.app          ← double-click to launch
+USER_MANUAL.html      ← open in browser</code></pre>
+    </div>
+  </div>
+  <div style="margin-top:8px">
+    <strong>Linux</strong>
+    <pre><code>ColonyPy/             ← folder containing the binary
+  ColonyPy            ← run this
+USER_MANUAL.html</code></pre>
+  </div>
+  <p style="margin-top:10px;font-size:0.9rem">No Python installation, no <code>model_data/</code> folder, no launcher scripts everything is inside the executable.</p>
+</div>
+
+<!-- WORKFLOW -->
+<h2 id="workflow">Overall Workflow</h2>
+
+<div class="step-grid">
+  <div class="step-card"><div class="step-num">1</div><h4>Prepare Images</h4><p>ChemiDoc, Coomassie Blue, 0.9 s, Medium size, 300 DPI</p></div>
+  <div class="step-card"><div class="step-num">2</div><h4>Name Files</h4><p>Follow naming convention; control plates end with <code>_C</code></p></div>
+  <div class="step-card"><div class="step-num">3</div><h4>Setup Tab</h4><p>Set input/output directories and analysis method</p></div>
+  <div class="step-card"><div class="step-num">4</div><h4>Analysis Tab</h4><p>Click Start Analysis, choose manual or automated mode</p></div>
+  <div class="step-card"><div class="step-num">5</div><h4>Manual Editor</h4><p>Review and correct automated detections per image</p></div>
+  <div class="step-card"><div class="step-num">6</div><h4>Results</h4><p>View summary table, open output folder, export CSV</p></div>
+</div>
+
+<!-- FILE NAMING -->
+<h2 id="naming">File Naming Convention</h2>
+<p><strong> Correct file naming is essential for ColonyPy to match control plates to test plates of the same strain and to group replicates for statistics.</strong> </p>
+<p>What happens if naming is wrong? Files will be listed as invalid and skipped entirely, no error will be shown for individual files, the run will just produce no results.<p>
+<p>
+
+<table>
+  <tr><th>Plate Type</th><th>Format</th><th>Example</th></tr>
+  <tr><td><span class="badge-pill badge-ctrl">Control plate</span></td><td><code>{n}_{strain}_C.jpg</code></td><td><code>1_gpr4.5_C.jpg</code></td></tr>
+  <tr><td><span class="badge-pill badge-tol">Test plate</span></td><td><code>{strain}_rep{n}_{condition}.jpg</code></td><td><code>gpr4.5_rep1_8ug.jpg</code></td></tr>
+</table>
+
+<ul>
+  <li>Control plates must end with <code>_C</code> (case-insensitive) before the file extension</li>
+  <li>The strain identifier must match between control and test plates</li>
+  <li>Conditions and replicate numbers are used for grouping statistics</li>
+  <li>Supported formats: <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.bmp</code>, <code>.tiff</code>, <code>.tif</code></li>
+</ul>
+
+
+ <p><strong>What actually happens when a run is performed without controls?</strong> </p>
+  <p><strong>In Agar dilution mode</strong> </p>
+<ul>
+  <li>If no control plates exist at all in the folder → analysis stops immediately with "No control plates found" and returns no results</li>
+  <li>If a control exists for some strains but not others → test plates for the unmatched strains are silently skipped with a console message only; they won't appear in output or CSV</li>
+  <li>If a control plate is present but colony detection fails on it → that strain's threshold falls back to the hardcoded default of 12 px, and percentages will be 0%</li>
+</ul>
+  <p><strong>In Disk diffusion mode</strong> </p>
+<ul>
+<li>If no control plates exist at all in the folder → analysis will proceed and all test strain threshold falls back to the hardcoded default of 12 px</li>
+<li>If a control exists for some strains but not others → test plates for the unmatched strains threshold will use the default 12 px, while matched test plates will utilise cntrol colony median threshold</li>
+</ul>
+
+
+
+
+<!-- SETUP TAB -->
+<h2 id="setup-tab">Setup Tab Step by Step</h2>
+<p>The Setup tab is the first tab you see when ColonyPy opens. Configure everything here before running analysis.</p>
+
+<h3>1. Directory Selection</h3>
+<ol>
+  <li>Click <span class="btn-demo">Browse…</span> next to <strong>Input Directory</strong> and navigate to the folder containing your plate images</li>
+  <li>Click <span class="btn-demo">Browse…</span> next to <strong>Output Directory</strong> and select or create a folder where results will be saved</li>
+</ol>
+<div class="card card-warn">
+  <div class="note-label">Re-run Warning</div>
+  Use a <strong>new output directory for every re-run</strong>. Results from a previous run will be overwritten if you use the same folder. See <a href="#reruns">Re-runs</a> section.
+</div>
+
+<h3>2. Analysis Method</h3>
+<p>Select the method matching your experimental setup:</p>
+<table>
+  <tr><th>Method</th><th>When to Use</th><th>Description</th></tr>
+  <tr><td><strong>Zone of Inhibition (Disk Diffusion)</strong></td><td>Antifungal disk present on plate</td><td>Detects the disk, fits the ZOI boundary using logistic regression, classifies colonies inside the ZOI</td></tr>
+  <tr><td><strong>Agar Dilution/Population Analysis Profiling (Full Plate)</strong></td><td>No disk drug in the agar</td><td>Analyses the full plate excluding the rim; classifies all colonies on the plate</td></tr>
+</table>
+
+<h3>3. Parameters</h3>
+<table>
+  <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+  <tr><td>Disk Diameter (mm)</td><td>6.0</td><td>Physical diameter of the antifungal disk. Only used for disk diffusion. Standard disks are 6 mm.Adjust here if you use a different disk size.</td></tr>
+  <tr><td>Plate Diameter (mm)</td><td>90.0</td><td>Physical diameter of the petri dish. Standard plates are 90 mm. Adjust here if you use a different plate size.</td></tr>
+  <tr><td>Default Colony Threshold (px)</td><td>12</td><td>Fallback threshold when no matching control plate is available. A colony with area below this is classified as Tolerance.</td></tr>
+</table>
+
+<h3>4. Colour Configuration</h3>
+<p>Adjust the overlay colours used in PDF output. Click any colour button to open the colour picker. Three presets are available: <span class="btn-demo-sm">Default</span> <span class="btn-demo-sm">Dark</span> <span class="btn-demo-sm">Vibrant</span></p>
+
+<h3>5. StarDist Status</h3>
+<p>At the bottom of the directory section you will see either:</p>
+<ul>
+  <li><strong style="color:var(--success)">✅ StarDist ready, bundled model loaded automatically</strong> ready to proceed</li>
+  <li><strong style="color:var(--danger)">❌ StarDist NOT installed</strong> re-launch the launcher script which will install it automatically</li>
+</ul>
+
+<!-- ANALYSIS TAB -->
+<h2 id="analysis-tab">Analysis Tab  Step by Step</h2>
+
+<h3>Pre-Analysis Check</h3>
+<p>The Analysis tab shows four green ticks when everything is ready:</p>
+<ul>
+  <li>✅ Input directory selected</li>
+  <li>✅ Output directory selected</li>
+  <li>✅ Analysis method chosen</li>
+  <li>✅ Images found in directory</li>
+</ul>
+<p>If any item shows ✗, go back to Setup and correct it. Click <span class="btn-demo-sm">Refresh Check</span> to revalidate after making changes.</p>
+
+<h3>Analysis Options</h3>
+<table>
+  <tr><th>Option</th><th>Description</th></tr>
+  <tr><td>Create comparison plots</td><td>Generate annotated PDF for each image. Recommended to leave enabled.</td></tr>
+  <tr><td>Save CSV results</td><td>Append each image result to <code>colony_analysis_results.csv</code>. Leave enabled.</td></tr>
+  <tr><td>Max replicates per PDF</td><td>Controls how many replicates appear in comparison PDFs. Default 4.</td></tr>
+</table>
+
+<h3>Starting Analysis</h3>
+<ol>
+  <li>Click <span class="btn-demo">Start Analysis</span></li>
+  <li>A dialog asks you to choose your workflow:
+    <ul>
+      <li><strong>YES Manual review</strong>: After each image is automatically analysed, the Manual Editor opens for you to correct detections. Best accuracy. Recommended for publications.</li>
+      <li><strong>NO Fully automated</strong>: All images are processed without review. Faster, suitable for screening.</li>
+      <li><strong>CANCEL</strong>: Abort and return to the main window.</li>
+    </ul>
+  </li>
+  <li>Watch progress in the log area. Control plates are processed first to establish baselines.</li>
+  <li>When complete, the Results tab opens automatically.</li>
+</ol>
+
+<p>To halt a running analysis, click <span class="btn-demo">Stop Analysis</span>. Already-processed images are saved; the analysis can be resumed later.</p>
+
+<h3>Resuming an Interrupted Analysis</h3>
+<p>If analysis is interrupted (stopped or crashes), relaunch ColonyPy, select the <strong>same input and output directories</strong>, and click Start Analysis. ColonyPy detects which images were already processed from the existing CSV and asks if you want to resume. Click <strong>YES</strong> to skip already-completed images.</p>
+
+<!-- EDITOR -->
+<h2 id="editor">Manual Editor, Complete Guide</h2>
+<p>The Manual Editor opens automatically after each image when running in manual review mode, or can be opened standalone via <strong>Tools → Manual Editor</strong>.</p>
+
+<h3>Opening the Editor</h3>
+<ul>
+  <li><strong>During analysis (manual mode)</strong>: Opens automatically after each image is detected</li>
+  <li><strong>Standalone (any image)</strong>: <em>Tools → Manual Editor</em>, then select an image file</li>
+  <li><strong>Load saved session</strong>: <em>Tools → Load Editing Session</em> (see <a href="#reopen">Re-opening Sessions</a>)</li>
+</ul>
+
+<h3>Editor Interface</h3>
+<p>The editor shows your plate image with colony overlays. While the editor has default colours refered to in this manual, users can change this to their preference. The left panel shows controls; the image fills the right area.</p>
+
+<table>
+  <tr><th>Overlay colour</th><th>Meaning</th></tr>
+  <tr><td><span style="color:#00FFFF;font-weight:bold">Cyan</span></td><td>Tolerance colony (small, below threshold)</td></tr>
+  <tr><td><span style="color:#FF00FF;font-weight:bold">Magenta</span></td><td>Heteroresistance colony (large, above threshold)</td></tr>
+  <tr><td><span style="color:#FF8C00;font-weight:bold">Orange</span></td><td>Control plate colony</td></tr>
+  <tr><td><span style="color:#00FF00;font-weight:bold">Green circle</span></td><td>Plate boundary</td></tr>
+  <tr><td><span style="color:#FFFF00;font-weight:bold">Yellow dashed arc</span></td><td>ZOI boundary (disk diffusion only)</td></tr>
+</table>
+
+<h3>Adding and Removing Colonies</h3>
+<table>
+  <tr><th>Action</th><th>How to do it</th></tr>
+  <tr><td>Add a colony</td><td>Select <span class="btn-demo-sm">Draw Colony</span> mode, then click and drag the cusor to draw the colony boundary in the image, it automatically classifies the colony</td></tr>
+   <tr><td>Remove a colony</td><td>Select <span class="btn-demo-sm">Delete Colony</span> mode, then click on the colony or left click and drag drag to delete multiple colonies</td></tr>
+  <tr><td>Reclassify a colony</td><td>Select <span class="btn-demo-sm">Reclassify</span> mode, then click the colony to toggle its type</td></tr>
+  <tr><td>Undo last action</td><td>Click <span class="btn-demo-sm">Undo</span> or press Ctrl+Z</td></tr>
+</table>
+
+<h3>Workflow Buttons (Manual Review Mode)</h3>
+<table>
+  <tr><th>Button</th><th>Effect</th></tr>
+  <tr><td><span class="btn-demo">Continue</span></td><td>Save corrections and move to the next image</td></tr>
+  <tr><td><span class="btn-demo-sm">Skip</span></td><td>Skip this image without saving does not appear in results</td></tr>
+  <tr><td><span class="btn-demo-sm">Cancel</span></td><td>Stop the entire analysis workflow</td></tr>
+</table>
+
+<!-- ADJUSTMENTS -->
+<h2 id="adjustments">Manual Boundary Adjustments</h2>
+<p>Occasionally the automatic boundary detection is imprecise. The editor provides sliders to correct this before re-detecting colonies.</p>
+
+<h3>Adjusting the ZOI Boundary (Disk Diffusion)</h3>
+<p>The ZOI (Zone of Inhibition) boundary is the circle around the disk within which colonies are counted. If it is too tight or too wide:</p>
+<ol>
+  <li>In the Manual Editor left panel, find the <strong>ZOI Boundary</strong> slider</li>
+  <li>Drag the slider left to shrink the ZOI or right to expand it</li>
+  <li>The yellow dashed arc on the image updates in real time</li>
+  <li>Click <span class="btn-demo">Re-detect Colonies</span> to rerun StarDist detection with the new boundary</li>
+</ol>
+<div class="card card-accent">
+  <div class="note-label">Re-detection</div>
+  When you click Re-detect Colonies, the full analysis pipeline (sharpening → CLAHE → reference standardisation → StarDist) runs again with your new boundary. This is identical to the original automated analysis not a simple filter of old results.
+</div>
+
+<h3>Adjusting the Disk Size</h3>
+<p>If the disk detection is slightly off (disk circle too large or too small over the actual disk):</p>
+<ol>
+  <li>Find the <strong>Disk Radius</strong> slider in the editor left panel</li>
+  <li>Adjust until the grey disk overlay matches the physical disk in the image</li>
+  <li>Click <span class="btn-demo">Re-detect Colonies</span> colonies that overlap the disk exclusion zone will be removed</li>
+</ol>
+
+<h3>Adjusting the Plate Boundary</h3>
+<p>The green circle should sit precisely on the inner edge of the petri dish rim. If it is too large (picking up false colonies on the rim) or too small (missing edge colonies):</p>
+<ol>
+  <li>Find the <strong>Plate Radius</strong> slider in the editor left panel</li>
+  <li>Drag left to shrink the boundary (excludes more rim) or right to expand it</li>
+  <li>For agar dilution plates where the rim is thick or falsely bright, shrink the plate radius until the green circle sits clearly inside the rim</li>
+  <li>Click <span class="btn-demo">Re-detect Colonies</span></li>
+</ol>
+
+<div class="card card-warn">
+  <div class="note-label">Wide Rim / False Edge Colonies in Agar Dilution analysis mode</div>
+  <p>In full-plate (agar dilution) analysis, the plate rim often produces bright artefacts that are mistaken for colonies. This is the most common cause of inflated counts in agar dilution mode.</p>
+  <p style="margin-top:10px"><strong>Fix:</strong> Reduce the Plate Radius slider by 5–15 pixels until the false rim colonies disappear from the overlay, then click Re-detect Colonies. Apply the same adjustment consistently across all plates in the same batch.</p>
+</div>
+
+<h3>Adjusting the Colony Size Threshold</h3>
+<p>If the boundary between Tolerance and Heteroresistance colonies is set incorrectly (e.g. all colonies appear one colour):</p>
+<ol>
+  <li>Find the <strong>Colony Threshold</strong> spinner in the editor</li>
+  <li>Increase the value to reclassify more colonies as Tolerance (fewer Heteroresistance)</li>
+  <li>Decrease to classify more as Heteroresistance</li>
+  <li>Click <span class="btn-demo">Apply Threshold</span> colonies reclassify immediately without re-detection</li>
+</ol>
+<p>Note: When a control plate is matched, this threshold is set automatically from the control median colony size. Manual adjustment overrides this only for the current image.</p>
+<p>It is recommended not to adjust the threshold and use a control plate is matched, this threshold is set automatically from the control median colony size. </p>
+
+<!-- REOPEN -->
+<h2 id="reopen">Re-opening Saved Sessions</h2>
+<p>Every image processed through the manual review workflow has its session saved automatically in <code>editing_sessions/</code> inside your output folder. You can reload any session to review or redo it.</p>
+
+<h3>To Load a Saved Session</h3>
+<ol>
+  <li>Go to <strong>Tools → Load Editing Session</strong></li>
+  <li>Navigate to your output folder → <code>editing_sessions/</code></li>
+  <li>Select the <code>*_session.json</code> file for the image you want to review</li>
+  <li>The editor opens showing the image with all previously saved colony annotations</li>
+  <li>Make any corrections, then use <span class="btn-demo">Continue</span> to re-save</li>
+</ol>
+
+<div class="card card-accent">
+  <div class="note-label">Session Files</div>
+  Session files (<code>*_session.json</code>) store all colony positions, classifications, and boundary parameters from the last editor save for that image. They do not include the image itself the original image file must be accessible at its original path (or in the input directory).
+</div>
+
+<!-- RERUNS -->
+<h2 id="reruns">Re-runs and Result Overwriting</h2>
+
+<div class="card card-danger">
+  <div class="note-label">Always Use a New Output Directory for Re-runs</div>
+  <p>ColonyPy updates <code>colony_analysis_results.csv</code> by overwriting rows for any image that is re-processed. If you re-run with the same output directory, your previous results for that image are replaced with no confirmation prompt.</p>
+  <p style="margin-top:10px">To preserve all versions of your results:</p>
+  <ol style="margin-top:8px">
+    <li>Create a new output folder before each re-run (e.g. <code>run2_adjusted_boundary/</code>)</li>
+    <li>Set this as the output directory in the Setup tab</li>
+    <li>Run analysis as normal</li>
+  </ol>
+</div>
+
+<p>Batch summary (<code>BATCH_SUMMARY_*.csv</code>) and replicate statistics (<code>REPLICATE_STATISTICS_*.csv</code>) files are timestamped and never overwritten. A new file is created each time analysis completes.</p>
+
+<!-- OUTPUT FILES -->
+<h2 id="output">Output Files</h2>
+
+<table>
+  <tr><th>File</th><th>Description</th></tr>
+  <tr><td><code>colony_analysis_results.csv</code></td><td>Master results table one row per image. Updated each time an image is processed. <strong>Delete this file or use a new output directory before re-running.</strong></td></tr>
+  <tr><td><code>{image}_analysis.pdf</code></td><td>Per-image annotated visualisation. Disk diffusion includes ZOI regression plot. Agar dilution shows full plate with colony overlay and stats box.</td></tr>
+  <tr><td><code>BATCH_SUMMARY_{timestamp}.csv</code></td><td>Summary across all images in the batch. New file created each run.</td></tr>
+  <tr><td><code>REPLICATE_STATISTICS_{timestamp}.csv</code></td><td>Group statistics with CV warnings. Groups are formed by strain + condition. Minimum 2 replicates per group required.</td></tr>
+  <tr><td><code>editing_sessions/{image}_session.json</code></td><td>Saved editor state for each manually reviewed image. Used by Load Editing Session.</td></tr>
+</table>
+
+<h3>CSV Column Reference</h3>
+<table>
+  <tr><th>Column</th><th>Description</th><th>Method</th></tr>
+  <tr><td>analysis_method</td><td>disk / agar_dilution / control_plate</td><td>All</td></tr>
+  <tr><td>strain / replicate / condition</td><td>Parsed from filename</td><td>All</td></tr>
+  <tr><td>total_colonies</td><td>All colonies detected</td><td>All</td></tr>
+  <tr><td>tolerance_colonies</td><td>Colonies below threshold</td><td>Test plates</td></tr>
+  <tr><td>heteroresistance_colonies</td><td>Colonies at or above threshold</td><td>Test plates</td></tr>
+  <tr><td>tolerance_percentage_by_count</td><td>% of control plate count for agar dilution method or % of colonies detected in the ZOI</td><td>Test plates</td></tr>
+  <tr><td>heteroresistance_percentage_by_count</td><td>% of control plate count for agar dilution method or % of colonies detected in the ZOI</td><td>Test plates</td></tr>
+  <tr><td>threshold_used_px</td><td>Size threshold in pixels</td><td>Test plates</td></tr>
+  <tr><td>control_median_px / control_cv_percent</td><td>From matched control plate</td><td>Test plates</td></tr>
+  <tr><td>control_colony_count</td><td>Total colonies on control plate</td><td>Test plates</td></tr>
+  <tr><td>zoi_radius_mm / zoi_area_mm2</td><td>ZOI dimensions</td><td>Disk diffusion only</td></tr>
+  <tr><td>disk_radius_mm</td><td>Detected disk radius</td><td>Disk diffusion only</td></tr>
+  <tr><td>colony_density_per_mm2 etc.</td><td>Density metrics</td><td>Disk diffusion only</td></tr>
+  <tr><td>manually_corrected</td><td>Yes/No editor was used</td><td>All</td></tr>
+</table>
+
+<!-- TRAINED MODEL -->
+<h2 id="model">Trained StarDist Model</h2>
+<p>The bundled StarDist model was trained specifically on fungal colony images from the Nielsen Laboratory. Understanding the model architecture and training conditions helps you get the best results and interpret detection limitations correctly.</p>
+
+<h3>Architecture</h3>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Architecture</td><td>StarDist2D U-Net backbone</td></tr>
+  <tr><td>Input channels</td><td>1 (single-channel grayscale)</td></tr>
+  <tr><td>Ray count</td><td>32 (star-convex polygon approximation)</td></tr>
+  <tr><td>U-Net depth</td><td>3</td></tr>
+  <tr><td>Base filters</td><td>32 (doubled per depth level)</td></tr>
+  <tr><td>Conv per depth</td><td>2</td></tr>
+  <tr><td>Activation</td><td>ReLU</td></tr>
+  <tr><td>Post-UNet conv</td><td>128 filters</td></tr>
+  <tr><td>Grid downsampling</td><td>2 × 2</td></tr>
+</table>
+
+<h3>Training Configuration</h3>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Training epochs</td><td>100</td></tr>
+  <tr><td>Best checkpoint</td><td>Epoch 99</td></tr>
+  <tr><td>Steps per epoch</td><td>200</td></tr>
+  <tr><td>Batch size</td><td>2</td></tr>
+  <tr><td>Training patch size</td><td>256 × 256 px</td></tr>
+  <tr><td>Learning rate</td><td>0.0003</td></tr>
+  <tr><td>LR schedule</td><td>ReduceLROnPlateau factor 0.5, patience 40</td></tr>
+  <tr><td>Distance loss</td><td>Mean absolute error (MAE)</td></tr>
+  <tr><td>Loss weights</td><td>Object probability: 1.0 · Distance: 0.2</td></tr>
+  <tr><td>Training images</td><td>51</td></tr>
+  <tr><td>Validation images</td><td>9</td></tr>
+</table>
+
+<h3>Detection Thresholds</h3>
+<table>
+  <tr><th>Threshold</th><th>Value</th><th>Effect</th></tr>
+  <tr><td>Probability threshold (prob)</td><td>0.25</td><td>Lower = more detections (more false positives); higher = fewer detections (more misses)</td></tr>
+  <tr><td>NMS overlap threshold</td><td>0.3</td><td>Lower = fewer merged colonies accepted; higher = more overlapping detections retained</td></tr>
+</table>
+
+<h3>Performance</h3>
+<div class="metric-grid">
+  <div class="metric-box"><div class="val">82.9%</div><div class="lbl">Precision</div></div>
+  <div class="metric-box"><div class="val">78.2%</div><div class="lbl">Recall</div></div>
+  <div class="metric-box"><div class="val">80.5%</div><div class="lbl">F1 Score</div></div>
+  <div class="metric-box"><div class="val">99/100</div><div class="lbl">Best Epoch</div></div>
+</div>
+
+<div class="card card-accent">
+  <div class="note-label">Two-Stage Accuracy</div>
+  <p>The model achieves approximately 80% automated recall. After manual review using the editor (adding missed edge colonies, removing false positives), effective accuracy reaches <strong>95–99%</strong> for well-prepared plates. This is why the manual review workflow is recommended for published results.</p>
+</div>
+
+<h3>Training Image Conditions</h3>
+<p>All training images were acquired under these exact conditions:</p>
+<ul>
+  <li>Light application: <strong>Coomassie Blue</strong></li>
+  <li>Imager: <strong>Bio-Rad ChemiDoc</strong>, white transillumination mode</li>
+  <li>Exposure: <strong>0.9 seconds</strong></li>
+  <li>Size: <strong>Medium</strong> 1830 × 1646 pixels, 300 DPI, 24-bit colour, 15.5 × 12.4 cm</li>
+  <li>Plate: Standard 90 mm petri dish</li>
+</ul>
+<p>The model is expected to perform best on images that closely match these conditions. Images from different imagers, different exposure times, or different lighting protocols may give reduced accuracy.</p>
+
+<h3>Image Preprocessing Pipeline</h3>
+<p>Before StarDist runs, each image goes through the following pipeline:</p>
+<ol>
+  <li><strong>Unsharp mask sharpening</strong> (disk diffusion only) amount = 1.5, sigma = 5.0 px. Applied to colour image before grayscale conversion.</li>
+  <li><strong>Grayscale conversion</strong></li>
+  <li><strong>CLAHE</strong> contrast-limited adaptive histogram equalisation (clip limit 3.0, 8×8 tile grid)</li>
+  <li><strong>Reference standardisation</strong> intensity profile matched to the training dataset mean and standard deviation</li>
+  <li><strong>StarDist normalisation</strong> percentile stretch (1st–99.8th) before model inference</li>
+</ol>
+<p>Control plates and agar dilution plates are <strong>not</strong> sharpened, sharpening is only applied to disk diffusion test plates.</p>
+
+<!-- TROUBLESHOOTING -->
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<details>
+  <summary>Disk not detected / disk detection failed</summary>
+  <div>
+    <p>ColonyPy uses a Hough circle transform to find the disk. This fails if:</p>
+    <ul>
+      <li>The disk is at the very edge of the frame, ensure the full plate is visible</li>
+      <li>The tray has smudges or bright spots near the disk size range</li>
+      <li>The image is very dark or overexposed, check your 0.9 s exposure setting</li>
+    </ul>
+    <p>If detection fails, ColonyPy will ask if you want to skip the image. Use the Manual Editor to open the image directly and set the disk position manually.</p>
+  </div>
+</details>
+
+<details>
+  <summary>All colonies classified as Heteroresistance</summary>
+  <div>
+    <p>This typically means the threshold is set incorrectly:</p>
+    <ul>
+      <li>Verify that the matching control plate file is in the input directory and named correctly (must end with <code>_C</code>)</li>
+      <li>Check that the strain identifier in the control filename matches the test plate</li>
+      <li>In the editor, increase the Colony Threshold value and click Apply Threshold</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>False colonies detected on the plate rim</summary>
+  <div>
+    <p>The inner surface of the petri dish rim often produces a bright ring of artefacts. To fix:</p>
+    <ol>
+      <li>Open the editor for the affected image</li>
+      <li>Reduce the Plate Radius slider until the green boundary circle sits inside the rim</li>
+      <li>Click Re-detect Colonies</li>
+      <li>Apply the same radius adjustment to all plates in the batch for consistency</li>
+    </ol>
+  </div>
+</details>
+
+<details>
+  <summary>Fewer colonies detected than expected near the ZOI edge</summary>
+  <div>
+    <p>Colonies at the outer edge of the ZOI are often lower contrast and may be missed by automated detection. This is normal, the model has ~80% automated recall. Use manual review to add missed edge colonies:</p>
+    <ol>
+      <li>In the editor, select Add Tolerance or Add Heteroresistance mode</li>
+      <li>Click on each missed colony</li>
+      <li>Alternatively, expand the ZOI boundary slightly using the ZOI slider and Re-detect</li>
+    </ol>
+  </div>
+</details>
+
+<details>
+  <summary>Lawn in the ZOI</summary>
+  <div>
+    <p>If colonies have grown into a confluent lawn, ColonyPy cannot count individual colonies. The model is designed for convex, colonies only. Solutions:</p>
+    <ul>
+      <li>Repeat the experiment with a lower inoculum concentration</li>
+      <li>The lawn colony clusters will be detected as single large heteroresistance colonies, this is not biologically meaningful and should not be included in analysis</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>StarDist not installed / model not found</summary>
+  <div>
+    <p>This should not occur with the PyInstaller executable as StarDist and the model are bundled inside. If you see this error:</p>
+    <ul>
+      <li>Re-download the ColonyPy executable the download may have been corrupted</li>
+      <li>Ensure you are running the correct executable for your platform (Windows <code>.exe</code>, macOS <code>.app</code>, Linux binary)</li>
+      <li>On macOS, make sure you extracted the <code>.zip</code> fully before launching do not run directly from inside the zip</li>
+      <li>If running from source (developer), ensure <code>model_data/weights_best.h5</code> exists in the same folder as the <code>.py</code> files</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>Analysis is very slow</summary>
+  <div>
+    <p>StarDist inference time depends on image size and hardware. On a standard laptop (no GPU), each image takes 30–120 seconds. To reduce analysis time:</p>
+    <ul>
+      <li>Close other applications while ColonyPy is running</li>
+      <li>If you have a supported GPU, TensorFlow will use it automatically</li>
+    </ul>
+    <div class="card card-warn" style="margin-top:12px;">
+      <div class="note-label">⚠ TIFF Images</div>
+      <p style="margin:0;">TIFF images take longer to be analysed due to their large file size. This is especially noticeable if your system's RAM is running low</p>
+    </div>
+  </div>
+</details>
+
+<!-- FAQ -->
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<details>
+  <summary>Can I use images from a different imager?</summary>
+  <div>
+    <p>The StarDist model was trained exclusively on images from a Bio-Rad ChemiDoc with Coomassie Blue light application at 0.9s exposure. Images from other imagers may have different contrast profiles that reduce detection accuracy. If you use a different system, we recommend validating manually on a representative subset of images before using results for publication.</p>
+  </div>
+</details>
+
+<details>
+  <summary>Do I need a control plate for every strain?</summary>
+  <div>
+    <p>Yes. The classification threshold is derived from the median colony size on the matched control plate. Without a control plate, ColonyPy uses the default threshold (12 px by default), which is unlikely to be calibrated for your strain. Always include at least one control plate per strain per batch.</p>
+  </div>
+</details>
+
+<details>
+  <summary>Can I analyse multiple plates per image?</summary>
+  <div>
+    <p>No. ColonyPy expects one plate per image. Use the ChemiDoc imaging software to capture separate images for each plate.</p>
+  </div>
+</details>
+
+<details>
+  <summary>What does the CV warning in replicate statistics mean?</summary>
+  <div>
+    <p>CV (coefficient of variation) measures variability across replicates. A "HIGH VARIABILITY" flag appears when CV exceeds the threshold for that metric (e.g. 20% for total colonies). High CV may indicate: inconsistent inoculum between replicates, variable culturing, imaging artefacts, or biological variability. Investigate flagged groups before reporting.</p>
+  </div>
+</details>
+
+<details>
+  <summary>How do I report ColonyPy in a methods section?</summary>
+  <div>
+    <p>Suggested methods text:</p>
+    <blockquote style="border-left:3px solid var(--accent);padding-left:14px;margin:10px 0;font-style:italic">
+    Please cite the ColonyPy publication once it becomes available Atim et al., 2026 (when available). Colony images were acquired using a Bio-Rad ChemiDoc imaging system (white transillumination mode, 0.9 s exposure, Coomassie Blue light application; 1830 × 1646 pixels, 300 DPI, 24-bit colour, 15.5 × 12.4 cm physical size). Colony detection and classification were performed using ColonyPy v1.0 (Nielsen Laboratory), which implements a StarDist deep-learning segmentation model (F1 = 80.5%, precision = 82.9%, recall = 78.2%, trained on 60 images). Colonies were classified as Tolerance or Heteroresistance based on size relative to the median colony area of strain-matched no-drug control plates. Automated detections were reviewed and corrected using the ColonyPy manual editor.
+    </blockquote>
+  </div>
+</details>
+
+<details>
+  <summary>How do I save settings between sessions?</summary>
+  <div>
+    <p>Use <strong>File → Save Settings…</strong> to save your current parameters (directories, method, colours, thresholds) to a JSON file. Load them again with <strong>File → Load Settings…</strong> at the start of your next session.</p>
+  </div>
+</details>
+
+</main>
+
+<footer>
+  ColonyPy v1.0 &nbsp;·&nbsp; Nielsen Laboratory &nbsp;·&nbsp; Virginia Tech University &nbsp;·&nbsp;StarDist colony detection pipeline
+</footer>
+
+</body>
+</html>
