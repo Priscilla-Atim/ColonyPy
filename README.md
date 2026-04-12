@@ -3,7 +3,7 @@
 **Automated fungal colony detection and classification for antifungal tolerance and heteroresistance, powered by StarDist deep learning**  
 ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to segment colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to strain-matched control plates.
 
-\---
+
 
 ## Download
 
@@ -15,7 +15,7 @@ Download the latest version for your operating system from the [Releases](../../
 |🍎 macOS|`ColonyPy\_macOS.zip`|
 |🐧 Linux|`ColonyPy\_Linux`|
 
-\---
+
 
 ## ⚠️ Security Notice
 
@@ -40,7 +40,7 @@ chmod +x ColonyPy\_Linux
 ./ColonyPy\_Linux
 ```
 
-\---
+
 
 ## User Manual
 
@@ -49,7 +49,7 @@ The full user manual is available here:
 
 The manual covers installation, workflow, the manual editor, output files, troubleshooting, and FAQs.
 
-\---
+
 
 ## Features
 
@@ -61,7 +61,7 @@ The manual covers installation, workflow, the manual editor, output files, troub
 * CSV and Excel output with replicate statistics
 * Cross-platform: Windows, macOS, and Linux
 
-\---
+
 
 ## System Requirements
 
@@ -73,7 +73,7 @@ The manual covers installation, workflow, the manual editor, output files, troub
 
 > \*\*Note:\*\* TIFF images take longer to analyse due to their large file size, especially if your system RAM is running low. Converting images to PNG before analysis will improve performance.
 
-\---
+
 
 ## Citation
 
@@ -81,13 +81,11 @@ If you use ColonyPy in your research, please cite:
 
 > Atim, P. et al. (2026). \*ColonyPy: A deep-learning pipeline for automated fungal colony detection and classification of antifungal tolerance and heteroresistance.\* \[Journal name, DOI — coming soon]
 
-\---
 
 ## Contact
 
 For questions or issues, please open a [GitHub Issue](../../issues) or contact the Nielsen Laboratory at Virginia Tech University.
 
-\---
 
 *ColonyPy v1.0 · Nielsen Laboratory · Virginia Tech University*
 
