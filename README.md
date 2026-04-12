@@ -33,8 +33,8 @@ ColonyPy is not commercially code-signed as it is an academic research tool. You
 
 ### Linux
 
-1. Right-click the downloaded file → Properties → Permissions
-2. Check "Allow executing file as program"
+1. Right-click the downloaded file → **Properties → Permissions**
+2. Check **"Allow executing file as program"**
 3. Double-click to open, or right-click → Run as Program
 
 
@@ -76,7 +76,7 @@ The manual covers installation, workflow, the manual editor, output files, troub
 
 If you use ColonyPy in your research, please cite:
 
-> Atim, P. et al. (2026). \*ColonyPy: A deep-learning pipeline for automated fungal colony detection and classification of antifungal tolerance and heteroresistance.\* \[Journal name, DOI — coming soon]
+> Atim, P. et al. (2026). \*ColonyPy: A deep-learning pipeline for automated fungal colony detection and classification of antifungal tolerance and heteroresistance.\* \[Journal name, DOI coming soon]
 
 
 ## Contact
