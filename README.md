@@ -33,12 +33,9 @@ ColonyPy is not commercially code-signed as it is an academic research tool. You
 
 ### Linux
 
-You may need to make the file executable before running it:
-
-```bash
-chmod +x ColonyPy\_Linux
-./ColonyPy\_Linux
-```
+1. Right-click the downloaded file → Properties → Permissions
+2. Check "Allow executing file as program"
+3. Double-click to open, or right-click → Run as Program
 
 
 
