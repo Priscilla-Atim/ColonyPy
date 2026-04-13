@@ -55,7 +55,6 @@ The manual covers installation, workflow, the manual editor, output files, troub
 * Classification of colonies as **Tolerance** or **Heteroresistance**
 * Strain-matched control plate calibration
 * Manual editor for adding, removing, and reclassifying colonies
-* Batch processing of multiple plates
 * CSV and Excel output with replicate statistics
 * Cross-platform: Windows, macOS, and Linux
 
