@@ -68,7 +68,7 @@ The manual covers installation, workflow, the manual editor, output files, troub
 |Storage|500 MB free space|
 |GPU|Optional TensorFlow will use a supported GPU automatically if available|
 
-> **Note**: TIFF images take longer to analyse due to their large file size, especially if your system RAM is running low. Converting images to PNG before analysis will improve performance.
+> **Note**: Windows is supported but has known compatibility limitations with machine learning frameworks. On Windows, a single image may take 3–5 minutes to analyse. If you are on Windows and need faster performance, the recommended solution is to set up Ubuntu via WSL (Windows Subsystem for Linux) and run the Linux version of ColonyPy, this restores the ~20 second per image speed.
 
 
 
