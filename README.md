@@ -1,8 +1,7 @@
 # ColonyPy
 
-**Automated fungal colony detection and classification for antifungal tolerance and heteroresistance, using StarDist deep learning**  
-ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to identify colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to isolate-matched control plates.
-
+**Automated fungal colony detection and classification for antifungal tolerance and heteroresistance, using StarDist deep learning**
+ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to identify colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to the p25 (25th percentile) colony area of isolate-matched, no-drug control plates. Both **disk diffusion** and **agar dilution / population analysis profiling** workflows are supported.
 
 
 ## Download
@@ -14,7 +13,6 @@ Download the latest version for your operating system from the [Releases](../../
 |🪟 Windows|`ColonyPy\_Windows.exe`|
 |🍎 macOS|`ColonyPy\_macOS.zip`|
 |🐧 Linux|`ColonyPy\_Linux`|
-
 
 
 ## ⚠️ Security Notice
@@ -39,6 +37,8 @@ ColonyPy is not commercially code-signed as it is an academic research tool. You
 
 > If you continue to experience issues bypassing the security warning, please open a [GitHub Issue](../../issues) or contact us directly and we will assist you.
 
+>  **⏱ First-launch delay:** On the very first launch, ColonyPy may take **5–10 minutes** to start while it unpacks its bundled libraries. Subsequent launches are faster. This is normal behaviour for PyInstaller executables.
+
 
 ## User Manual
 
@@ -48,16 +48,19 @@ The full user manual is available here:
 The manual covers installation, workflow, the manual editor, output files, troubleshooting, and FAQs.
 
 
-
 ## Features
 
 * Automated colony detection using a StarDist deep-learning model
-* Classification of colonies as **Tolerance** or **Heteroresistance**
+* Two analysis workflows: disk diffusion and agar dilution / population analysis profiling
+* Classification of colonies as **Tolerance** (below p25 control threshold) or **Heteroresistance** (at or above p25 control threshold)
 * Strain-matched control plate calibration
 * Manual editor for adding, removing, and reclassifying colonies
-* CSV and Excel output with replicate statistics
+* Session saving and reloading (Tools → Load Editing Session)
+* Settings save/load between sessions (File → Save Settings / Load Settings)
+* CSV and Excel output with replicate statistics and coefficient-of-variation warnings
+* Per-image annotated PDF visualisations
 * Cross-platform: Windows, macOS, and Linux
-
+* No Python installation, no internet connection, and no additional setup required. ColonyPy is fully self-contained executable
 
 
 ## System Requirements
@@ -69,7 +72,6 @@ The manual covers installation, workflow, the manual editor, output files, troub
 |GPU|Optional TensorFlow will use a supported GPU automatically if available|
 
 > **Note**: Windows is supported but has known compatibility limitations with machine learning frameworks. On Windows, a single image may take 3–5 minutes to analyse. If you are on Windows and need faster performance, the recommended solution is to set up Ubuntu via WSL (Windows Subsystem for Linux) and run the Linux version of ColonyPy, this restores the ~20 second per image speed.
-
 
 
 ## Citation
@@ -85,4 +87,3 @@ For questions or issues, please open a [GitHub Issue](../../issues) or contact t
 
 
 *ColonyPy v1.0 · Nielsen Laboratory · Virginia Tech University*
-
