@@ -78,7 +78,7 @@ The manual covers installation, workflow, the manual editor, output files, troub
 
 If you use ColonyPy in your research, please cite:
 
-> Atim, P. et al. (2026). ColonyPy: A python-based image analysis pipeline to quantify tolerance and heteroresistance in Cryptococcus neoformans. \[Journal name, DOI coming soon]
+> Atim, P. et al. (2026). ColonyPy: A python-based image analysis pipeline to quantify tolerance and heteroresistance in _Cryptococcus neoformans_. \[Journal name, DOI coming soon]
 
 
 ## Contact
