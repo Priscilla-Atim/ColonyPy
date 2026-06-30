@@ -4,9 +4,9 @@
 ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to identify colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to the p25 (25th percentile) colony area of isolate-matched, no-drug control plates. Both **disk diffusion** and **agar dilution / population analysis profiling** workflows are supported.
 
 
-## Download
+## Download 
 
-Download the latest version for your operating system from the [Releases](../../releases) page.
+Download the latest version of ColonyPy for your operating system from the [Releases](../../releases) page.
 
 |Platform|File|
 |-|-|
