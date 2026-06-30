@@ -66,7 +66,7 @@ The manual covers installation, workflow, the manual editor, output files, troub
 |-|-|
 |RAM|8 GB (16 GB recommended for large batches)|
 |Storage|500 MB free space|
-|GPU|Optional — TensorFlow will use a supported GPU automatically if available|
+|GPU|Optional TensorFlow will use a supported GPU automatically if available|
 
 > **Note**: TIFF images take longer to analyse due to their large file size, especially if your system RAM is running low. Converting images to PNG before analysis will improve performance.
 
