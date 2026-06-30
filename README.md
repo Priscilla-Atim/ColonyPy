@@ -1,7 +1,7 @@
 # ColonyPy
 
 **Automated fungal colony detection and classification for antifungal tolerance and heteroresistance, using StarDist deep learning**  
-ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to segment colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to strain-matched control plates.
+ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to identify colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to isolate-matched control plates.
 
 
 
