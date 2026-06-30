@@ -12,7 +12,7 @@ Download the latest version for your operating system from the [Releases](../../
 |-|-|
 |🪟 Windows|`ColonyPy\_Windows.exe`|
 |🍎 macOS|`ColonyPy\_macOS.zip`|
-|🐧 Linux|`ColonyPy\_Linux`|
+|🐧 Linux|`ColonyPy\_Linux.zip`|
 
 
 ## ⚠️ Security Notice
