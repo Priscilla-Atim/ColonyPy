@@ -83,7 +83,7 @@ If you use ColonyPy in your research, please cite:
 
 ## Contact
 
-For questions or issues, please open a [GitHub Issue](../../issues) or contact the Nielsen Laboratory at Virginia Tech University.
+For questions or issues, please open a [GitHub Issue](../../issues) or contact apriscilla@vt.edu.
 
 
 *ColonyPy v1.0 · Nielsen Laboratory · Virginia Tech University*
