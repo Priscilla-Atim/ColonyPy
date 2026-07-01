@@ -74,6 +74,16 @@ The manual covers installation, workflow, the manual editor, output files, troub
 > **Note**: Windows is supported but has known compatibility limitations with machine learning frameworks. On Windows, a single image may take 3–5 minutes to analyse. If you are on Windows and need faster performance, the recommended solution is to set up Ubuntu via WSL (Windows Subsystem for Linux) and run the Linux version of ColonyPy, this restores the ~20 second per image speed.
 
 
+## Sample Images
+
+Two sample images are provided in the [`sample_images/`](sample_images/) folder for you to test ColonyPy before analysing your own data.
+
+Please rename them following the file naming convention described in the [User Manual](https://Priscilla-Atim.github.io/ColonyPy/USER_MANUAL.html#naming) before importing:
+For example:
+- `KN99_rep1_FLC.jpg` — a test plate
+- `KN99_C.jpg` — the matching control plate
+
+
 ## Citation
 
 If you use ColonyPy in your research, please cite:
