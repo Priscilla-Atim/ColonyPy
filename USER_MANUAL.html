@@ -472,8 +472,8 @@ USER_MANUAL.html</code></pre>
 
 <table>
   <tr><th>Plate Type</th><th>Format</th><th>Example</th></tr>
-  <tr><td><span class="badge-pill badge-ctrl">Control plate</span></td><td><code>{n}_{strain}_C.jpg</code></td><td><code>1_gpr4.5_C.jpg</code></td></tr>
-  <tr><td><span class="badge-pill badge-tol">Test plate</span></td><td><code>{strain}_rep{n}_{condition}.jpg</code></td><td><code>gpr4.5_rep1_8ug.jpg</code></td></tr>
+  <tr><td><span class="badge-pill badge-ctrl">Control plate</span></td><td><code>{strain}_C.jpg</code></td><td><code>KN99_C.jpg</code></td></tr>
+  <tr><td><span class="badge-pill badge-tol">Test plate</span></td><td><code>{strain}_rep{n}_{condition}.jpg</code></td><td><code>KN99_rep1_FLC.jpg</code></td></tr>
 </table>
 
 <ul>
@@ -481,7 +481,7 @@ USER_MANUAL.html</code></pre>
   <li>The strain identifier must match between control and test plates</li>
   <li>Conditions and replicate numbers are used for grouping statistics</li>
   <li>Supported formats: <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.bmp</code>, <code>.tiff</code>, <code>.tif</code></li>
-  <li>Control plates can also be named <code>{strain}_rep{n}_C.jpg</code> or Test plates <code>{strain}_rep{n}.jpg</code> with no condition segment, ColonyPy still extracts strain and replicate correctly from this shorter pattern, you do not need to add a placeholder condition just to make the filename parse.</li>
+  <li>Control plates are identified by their filename ending in <code>_C</code> before the extension, for example <code>KN99_C.jpg</code>. A replicate number is optional for example, <code>KN99_rep1_C.jpg</code> also works, but <code>KN99_C.jpg</code> is sufficient.</li>
 </ul>
 
 
