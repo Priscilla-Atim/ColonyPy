@@ -80,8 +80,8 @@ Two sample images are provided in the [`sample_images/`](sample_images/) folder 
 
 Please rename them following the file naming convention described in the [User Manual](https://Priscilla-Atim.github.io/ColonyPy/USER_MANUAL.html#naming) before importing:
 For example:
-- `KN99_rep1_FLC.jpg` — a test plate
-- `KN99_C.jpg` — the matching control plate
+- `KN99_rep1_FLC.jpg` for a test plate
+- `KN99_C.jpg` for the matching control plate
 
 
 ## Citation
