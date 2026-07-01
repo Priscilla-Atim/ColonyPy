@@ -78,8 +78,8 @@ The manual covers installation, workflow, the manual editor, output files, troub
 
 Two sample images are provided in the [`sample_images/`](sample_images/) folder for you to test ColonyPy before analysing your own data.
 
-Please rename them following the file naming convention described in the [User Manual](https://Priscilla-Atim.github.io/ColonyPy/USER_MANUAL.html#naming) before importing:
-For example:
+Please rename them following the file naming convention described in the [User Manual](https://Priscilla-Atim.github.io/ColonyPy/USER_MANUAL.html#naming) before importing
+For example
 - `KN99_rep1_FLC.jpg` for a test plate
 - `KN99_C.jpg` for the matching control plate
 
