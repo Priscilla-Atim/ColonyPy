@@ -416,7 +416,7 @@
 </div>
 
 <ul>
-  <li>Windows 10/11, macOS 12+, or Linux (Ubuntu 20.04+)</li>
+  <li>Windows 10/11, macOS 12+, or Linux (Ubuntu 20.04+) or newer (or an equivalent recent Linux distribution) </li>
   <li>4 GB RAM minimum (8 GB recommended for large batches)</li>
   <li>No internet connection needed to run ColonyPy</li>
 </ul>
@@ -482,6 +482,7 @@ USER_MANUAL.html</code></pre>
   <li>Conditions and replicate numbers are used for grouping statistics</li>
   <li>Supported formats: <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.bmp</code>, <code>.tiff</code>, <code>.tif</code></li>
   <li>Control plates are identified by their filename ending in <code>_C</code> before the extension, for example <code>KN99_C.jpg</code>. A replicate number is optional for example, <code>KN99_rep1_C.jpg</code> also works, but <code>KN99_C.jpg</code> is sufficient.</li>
+  <li><strong>Test plates are the opposite: the replicate number is required, not optional.</strong> A test plate filename must contain <code>_rep{n}</code> (e.g. <code>_rep1_</code>) somewhere in the name. This is how ColonyPy groups replicates together for the statistics in <code>REPLICATE_STATISTICS_*.csv</code>. A test image named without a rep number, for example <code>KN99_FLC.jpg</code> instead of <code>KN99_rep1_FLC.jpg</code>, is treated as invalid and skipped, the same way a badly-named file would be.</li>
 </ul>
 
 
@@ -489,14 +490,18 @@ USER_MANUAL.html</code></pre>
   <p><strong>In Agar dilution mode</strong> </p>
 <ul>
   <li>If no control plates exist at all in the folder → analysis stops immediately with "No control plates found" and returns no results</li>
-  <li>If a control exists for some strains but not others → test plates for the unmatched strains are silently skipped with a console message only; they won't appear in output or CSV</li>
-  <li>If a control plate is present but colony detection fails on it → that strain's threshold falls back to the hardcoded default of 12 px, and percentages will be 0%</li>
+  <li>If a control exists for some strains but not others → test plates for the unmatched strains are refused and skipped, with a clear message naming the strain and the expected control filename (e.g. <code>KN99_C.jpg</code>); they will not appear in output or CSV</li>
 </ul>
   <p><strong>In Disk diffusion mode</strong> </p>
 <ul>
-<li>If no control plates exist at all in the folder → analysis will proceed and all test strain threshold falls back to the hardcoded default of 12 px</li>
-<li>If a control exists for some strains but not others → test plates for the unmatched strains threshold will use the default 12 px, while matched test plates will utilise control colony p25 threshold</li>
+<li>If no control plates exist at all in the folder → every test image is refused and skipped with the same "No control plate found for strain 'X'" message</li>
+<li>If a control exists for some strains but not others → test plates for the unmatched strains are refused and skipped the same way, while matched test plates process normally using that strain's control-derived p25 threshold</li>
 </ul>
+
+<div class="card card-danger">
+  <div class="note-label">A control plate is required for every strain, no exceptions</div>
+  <p>ColonyPy does not use a fallback threshold when a strain has no matching control plate. A test image with no matched control is <strong>refused and skipped entirely</strong> rather than being analysed with a guessed threshold, this guarantees every result in your CSV used a real, strain-specific p25 threshold. Add a control plate for every strain before running a batch.</p>
+</div>
 
 
 
@@ -528,8 +533,11 @@ USER_MANUAL.html</code></pre>
   <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
   <tr><td>Disk Diameter (mm)</td><td>6.0</td><td>Physical diameter of the antifungal disk. Only used for disk diffusion. Standard disks are 6 mm.Adjust here if you use a different disk size.</td></tr>
   <tr><td>Plate Diameter (mm)</td><td>90.0</td><td>Physical diameter of the petri dish. Standard plates are 90 mm. Adjust here if you use a different plate size.</td></tr>
-  <tr><td>Default Colony Threshold (px)</td><td>12</td><td>Fallback threshold when no matching control plate is available. A colony with area below this is classified as Tolerance.</td></tr>
 </table>
+<div class="card card-accent" style="margin-top:16px;">
+  <div class="note-label">No default colony threshold setting</div>
+  <p>ColonyPy does not have a configurable default colony threshold setting. The threshold always comes from a strain-matched control plate's p25 colony size, a test image is refused rather than analysed if no matching control exists. See <a href="#naming">File Naming Convention</a> for details.</p>
+</div>
 
 <h3>4. Colour Configuration</h3>
 <p>Adjust the overlay colours used in PDF output. Click any colour button to open the colour picker. Three presets are available: <span class="btn-demo-sm">Default</span> <span class="btn-demo-sm">Dark</span> <span class="btn-demo-sm">Vibrant</span></p>
@@ -580,6 +588,13 @@ USER_MANUAL.html</code></pre>
 </div>
 
 <h3>Starting Analysis</h3>
+
+<div class="card card-warn">
+  <div class="note-label">Close open results files before you start</div>
+  <p>If <code>colony_analysis_results.csv</code> or <code>agar_dilution_results.csv</code> is open in Excel (or any spreadsheet program) when a run starts, ColonyPy cannot write to it, Excel holds an exclusive lock on the file while it's open. Close the spreadsheet before starting, and keep it closed for the duration of the run. If you want to check progress partway through, close Excel first, then re-open the file to refresh, don't leave it open across the whole batch.</p>
+  <p style="margin-top:10px">Similarly, if a particular image's <code>{image}_analysis.pdf</code> is open in a PDF viewer, ColonyPy will not be able to re-process that image, the PDF has to be overwritten on every re-run, and the viewer's lock on the file blocks that. Close the PDF before re-running that image, or before starting a batch that includes it.</p>
+</div>
+
 <ol>
   <li>Click <span class="btn-demo">Start Analysis</span></li>
   <li>A dialog asks you to choose your workflow:
@@ -735,13 +750,13 @@ USER_MANUAL.html</code></pre>
 <table>
   <tr><th>Column</th><th>Description</th><th>Applies To</th></tr>
   <tr><td>analysis_method</td><td>disk or control_plate</td><td>All</td></tr>
-  <tr><td>strain / replicate / condition</td><td>Parsed from filename. Control plates named <code>{strain}_rep{n}_C.ext</code> or even just <code>{strain}_rep{n}.ext</code> (no condition suffix) are now parsed correctly for strain and replicate, previously these showed as N/A unless a condition segment was present.</td><td>All</td></tr>
+  <tr><td>strain / replicate / condition</td><td>Parsed from filename. Control plates named <code>{strain}_rep{n}_C.ext</code> or even just <code>{strain}_rep{n}.ext</code> (no condition suffix) are parsed correctly for strain and replicate.</td><td>All</td></tr>
   <tr><td>total_colonies</td><td>All colonies detected</td><td>All</td></tr>
   <tr><td>tolerance_colonies</td><td>Colonies below threshold. N/A for control plates, control plates are not classified.</td><td>Disk test plates</td></tr>
   <tr><td>heteroresistance_colonies</td><td>Colonies at or above threshold. N/A for control plates.</td><td>Disk test plates</td></tr>
   <tr><td>tolerance_percentage_by_count</td><td>% of colonies detected in the ZOI</td><td>Disk test plates</td></tr>
   <tr><td>heteroresistance_percentage_by_count</td><td>% of colonies detected in the ZOI</td><td>Disk test plates</td></tr>
-  <tr><td>p25_threshold_used_px</td><td>For test plates, the operative classification threshold, the p25 value from the matched control plate (colonies below this are Tolerance, at or above are Heteroresistance). Falls back to the hardcoded default (12 px) if no control is matched. For a control plate's own row, this column instead shows that control plate's own p25 value, so it is immediately clear the number originates from that plate.</td><td>All</td></tr>
+  <tr><td>p25_threshold_used_px</td><td>For test plates, the operative classification threshold, the p25 value from the matched control plate (colonies below this are Tolerance, at or above are Heteroresistance). A control plate is required for every strain, if none is matched, the test image is refused and never gets a row here at all, rather than falling back to a guessed value. For a control plate's own row, this column instead shows that control plate's own p25 value, so it is immediately clear the number originates from that plate.</td><td>All</td></tr>
   <tr><td>control_median_px</td><td>Median colony area from the control plate. Descriptive only, not used for classification. Recalculated from the current (edited) colony list every time the row is written, so it always reflects any manual corrections made in the editor.</td><td>All</td></tr>
   <tr><td>control_p75_px</td><td>75th percentile colony area from the control plate, gives a sense of the upper spread of colony sizes alongside the p25 threshold. Recalculated from the current (edited) colony list every time the row is written, just like control_median_px.</td><td>All</td></tr>
   <tr><td>control_cv_percent</td><td>Coefficient of variation of colony sizes on the control plate. High values (above ~30%) may indicate uneven inoculation or imaging artefacts. Also recalculated fresh at write time.</td><td>All</td></tr>
@@ -895,6 +910,18 @@ USER_MANUAL.html</code></pre>
 </details>
 
 <details>
+  <summary>Analysis fails partway through, or an image's PDF/CSV row won't update</summary>
+  <div>
+    <p>This is almost always a file-lock issue, another program has the output file open, so ColonyPy cannot write to it:</p>
+    <ul>
+      <li><strong>Results CSV open in Excel</strong>: close <code>colony_analysis_results.csv</code> or <code>agar_dilution_results.csv</code> in Excel (or any spreadsheet program) before starting a run, and keep it closed for the whole run. Excel holds an exclusive lock on the file while it's open, which blocks ColonyPy from saving results.</li>
+      <li><strong>A result PDF open in a PDF viewer</strong>: if <code>{image}_analysis.pdf</code> is open when ColonyPy tries to re-process that image, it cannot overwrite the file and that image will fail or be skipped. Close the PDF viewer for that file before re-running.</li>
+    </ul>
+    <p>If you need to check progress mid-run, close the file first, then reopen it afterwards to see the latest version, don't leave it open across the batch.</p>
+  </div>
+</details>
+
+<details>
   <summary>StarDist not installed / model not found</summary>
   <div>
     <p>This should not occur with the PyInstaller executable as StarDist and the model are bundled inside. If you see this error:</p>
@@ -920,7 +947,7 @@ USER_MANUAL.html</code></pre>
 <details>
   <summary>Do I need a control plate for every strain?</summary>
   <div>
-    <p>Yes. The classification threshold is derived from the p25 (25th percentile) colony size on the matched control plate. Without a control plate, ColonyPy uses the default threshold (12 px by default), which is unlikely to be calibrated for your strain. Always include at least one control plate per strain per batch.</p>
+    <p>Yes, and this is enforced. The classification threshold is derived from the p25 (25th percentile) colony size on the matched control plate. ColonyPy has no fallback default threshold: without a matching control plate, a test image for that strain is refused and skipped entirely (you'll see a message naming the strain and the expected control filename), rather than being analysed with a guessed value. Always include at least one control plate per strain per batch.</p>
   </div>
 </details>
 
@@ -951,7 +978,7 @@ USER_MANUAL.html</code></pre>
 <details>
   <summary>How do I save settings between sessions?</summary>
   <div>
-    <p>Use <strong>File → Save Settings…</strong> to save your current parameters (directories, method, colours, thresholds) to a JSON file. Load them again with <strong>File → Load Settings…</strong> at the start of your next session.</p>
+    <p>Use <strong>File → Save Settings…</strong> to save your current parameters (directories, method, colours) to a JSON file. Load them again with <strong>File → Load Settings…</strong> at the start of your next session.</p>
   </div>
 </details>
 
