@@ -12,7 +12,7 @@ Download the latest version of ColonyPy for your operating system from the [Rele
 |-|-|
 |🪟 Windows|`ColonyPy_Windows.exe`|
 |🍎 macOS|`ColonyPy_macOS.zip`|
-|🐧 Linux|`ColonyPy_Linux.zip`|
+|🐧 Linux|`ColonyPy_Linux.tar.gz`|
 
 
 ## ⚠️ Security Notice
