@@ -3,11 +3,11 @@
 
 ## How to cite
 
-If you use ColonyPy, please cite the paper:
+If you use ColonyPy, please cite the paper
 
 > Atim P, et al. 2026. ColonyPy: a Python-based image analysis pipeline to quantify tolerance and heteroresistance in *Cryptococcus neoformans*. *Microbiology Spectrum*. https://doi.org/10.1128/spectrum.02299-26
 
-And the software:
+And the software
 
 > Atim P, et al. 2026. ColonyPy (v1.0). Zenodo. https://doi.org/10.5281/zenodo.24019395
 
