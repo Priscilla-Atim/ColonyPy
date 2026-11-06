@@ -1,4 +1,15 @@
 # ColonyPy
+[![DOI](https://zenodo.org/badge/1176258574.svg)](https://doi.org/10.5281/zenodo.24019395)
+
+## How to cite
+
+If you use ColonyPy, please cite the paper:
+
+> Atim P, et al. 2026. ColonyPy: a Python-based image analysis pipeline to quantify tolerance and heteroresistance in *Cryptococcus neoformans*. *Microbiology Spectrum*. https://doi.org/10.1128/spectrum.02299-26
+
+And the software:
+
+> Atim P, et al. 2026. ColonyPy (v1.0). Zenodo. https://doi.org/10.5281/zenodo.24019395
 
 **Automated fungal colony detection and classification for antifungal tolerance and heteroresistance, using StarDist deep learning**
 ColonyPy is a desktop application for automated fungal colony detection and classification from petri dish images. It uses a StarDist deep-learning model to identify colonies and classify them as **Tolerance** or **Heteroresistance** based on size relative to the p25 (25th percentile) colony area of isolate-matched, no-drug control plates. Both **disk diffusion** and **agar dilution / population analysis profiling** workflows are supported.
